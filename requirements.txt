@@ -1,0 +1,2 @@
+confluent-kafka 2.3.0
+Faker           23.2.1
