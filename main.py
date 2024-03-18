@@ -1,11 +1,8 @@
 import os
 import requests
 import pandas as pd
-from dotenv import load_dotenv
 from snowflake.connector import connect, Error
 from prefect import flow, task
-
-load_dotenv()
 
 @task(log_prints=True, retries=3)
 def fetch_data():
