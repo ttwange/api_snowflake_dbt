@@ -44,7 +44,7 @@ The `dbt_workflow.py` script orchestrates dbt transformations:
 - Executes dbt transformations sequentially.
 ![DBT Models](images/model.png)
 - DBT models materialized as *views* while the staging raw data materialized as a view
-![alt text](images/image-2.pngimage-2.png)
+![alt text](images/image-2.png)
 - Dbt models for the data
 ![alt text](images/image-1.png)
 
