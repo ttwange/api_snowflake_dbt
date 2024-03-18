@@ -1,5 +1,5 @@
 # Snowflake ETL and dbt Workflow Orchestration
-![alt text](snow.jpg)
+![alt text](images/snow.jpg)
 This project demonstrates an end-to-end ETL pipeline from an API source to Snowflake database using Prefect for workflow orchestration. Additionally, it includes dbt (data build tool) for managing transformations.
 
 ## Project Structure
