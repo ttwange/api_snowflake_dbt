@@ -54,12 +54,13 @@ def load(data, conn):
         print(f"Error inserting data to Snowflake: {e}")
 
 
-@flow(name="Energy API ingest")
+@flow(name="snowflake_ingest")
 def energy_main():
     json_data = fetch_data()
     conn = connect_to_snowflake()
     clean_data = transformation(json_data)
     load(clean_data, conn)
+    print(clean_data)
 
 if __name__ == "__main__":
     energy_main()

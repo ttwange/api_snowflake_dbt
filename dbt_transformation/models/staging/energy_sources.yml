@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: energy
+    database: TEST_DATABASE
+    schema: TEST_SCHEMA
+    tables: 
+      - name: emission
+        columns:
+          - name: MINUTES1UTC
+            tests:
+              - unique
+              - not null
