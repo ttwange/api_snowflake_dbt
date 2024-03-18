@@ -57,4 +57,12 @@ The `dbt_workflow.py` script orchestrates dbt transformations:
 
 Deployment plans can be found in YAML files within the project.
 
+## Prefect workflow deployment
 
+- The flow runs of the api_snowflake_ETL workflows looks like this:
+
+![API TO SNOWFLAKE WORKFLOW](image-3.png)
+
+
+- I had so many failures as i encountered different challenges:
+![Different flow runs](image-4.png)
