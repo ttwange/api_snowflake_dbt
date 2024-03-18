@@ -1,0 +1,6 @@
+dbt-core==1.7.10
+dbt-snowflake==1.7.2
+snowflake-connector-python==3.7.1
+prefect-dbt-flow==0.5.6
+prefect==2.16.4
+pandas==2.2.1
