@@ -42,6 +42,7 @@ The `dbt_workflow.py` script orchestrates dbt transformations:
 - It utilizes the `prefect_dbt_flow` library for integration with Prefect.
 - Configures a dbt project and profile.
 - Executes dbt transformations sequentially.
+![DBT Models transformations](images/model.png)
 - DBT models materialized as *views* while the staging raw data materialized as a view
 ![alt text](images/image-2.pngimage-2.png)
 - Dbt models for the data
