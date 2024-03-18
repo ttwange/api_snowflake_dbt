@@ -32,7 +32,7 @@ def transformation(json_data):
     return df
 
 @task(log_prints=True, retries=3)
-def load(data, conn):
+def load(clean_data, conn):
     try:
         snowflake_insert_sql = """
             INSERT INTO emission (
@@ -45,6 +45,9 @@ def load(data, conn):
         ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
 
+        # Convert DataFrame to a list of tuples
+        data = clean_data.values.tolist()
+
         # Create a cursor from the Snowflake connection
         cursor = conn.cursor()
         cursor.executemany(snowflake_insert_sql, data)
@@ -54,12 +57,13 @@ def load(data, conn):
         print(f"Error inserting data to Snowflake: {e}")
 
 
-@flow(name="Energy API ingest")
+@flow(name="snowflake_ingest")
 def energy_main():
     json_data = fetch_data()
     conn = connect_to_snowflake()
     clean_data = transformation(json_data)
     load(clean_data, conn)
+    print(clean_data)
 
 if __name__ == "__main__":
     energy_main()
