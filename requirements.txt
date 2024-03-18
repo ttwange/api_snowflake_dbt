@@ -1,7 +1,0 @@
-prefect==2.16.2
-requests==2.31.0
-prefect-dbt-flow
-dbt-core==1.7.9
-dbt-snowflake==1.7.2
-prefect-dbt-flow==0.5.6
-snowflake-connector-python==3.7.1
