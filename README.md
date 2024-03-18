@@ -64,5 +64,5 @@ Deployment plans can be found in YAML files within the project.
 ![API TO SNOWFLAKE WORKFLOW](image-3.png)
 
 
-- I had so many failures as i encountered different challenges:
+- Building a data pipeline has its own different challenges:
 ![Different flow runs](image-4.png)
