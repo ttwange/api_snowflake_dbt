@@ -43,9 +43,9 @@ The `dbt_workflow.py` script orchestrates dbt transformations:
 - Configures a dbt project and profile.
 - Executes dbt transformations sequentially.
 - DBT models materialized as *views* while the staging raw data materialized as a view
-![alt text](image-2.png)
+![alt text](images\image-2.png)
 - Dbt models for the data
-![alt text](image-1.png)
+![alt text](images\image-1.png)
 ## Usage
 
 1. Ensure necessary environment variables (Snowflake credentials) are set.
@@ -61,7 +61,7 @@ Deployment plans can be found in YAML files within the project.
 
 - The flow runs of the api_snowflake_ETL workflows looks like this:
 
-![API TO SNOWFLAKE WORKFLOW](image-3.png)
+![API TO SNOWFLAKE WORKFLOW](image-3.png) 
 
 
 - Building a data pipeline has its own different challenges:
