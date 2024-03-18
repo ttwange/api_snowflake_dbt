@@ -1,0 +1,47 @@
+###
+### A complete description of a Prefect Deployment for flow 'dbt workflow'
+###
+name: Dbt snowflake
+description: |-
+  Function that configurates and runs a Prefect flow.
+
+  Returns:
+      A prefect flow
+version: a0ec127c464989dd4304e8ac4b34887d
+# The work queue that will handle this deployment's runs
+work_queue_name: default
+work_pool_name: null
+tags: []
+parameters: {}
+schedule: null
+schedules: []
+is_schedule_active: null
+infra_overrides: {}
+infrastructure:
+  type: process
+  env: {}
+  labels: {}
+  name: null
+  command: null
+  stream_output: true
+  working_dir: null
+  block_type_slug: process
+  _block_type_slug: process
+
+###
+### DO NOT EDIT BELOW THIS LINE
+###
+flow_name: dbt workflow
+manifest_path: null
+storage: null
+path: C:\Users\HP\Desktop\api_snowflake_dbt
+entrypoint: flows\dbt_etl_workflow.py:dbt_flow
+parameter_openapi_schema:
+  title: Parameters
+  type: object
+  properties: {}
+  required: null
+  definitions: null
+timestamp: '2024-03-18T10:41:29.311432+00:00'
+triggers: []
+enforce_parameter_schema: null
