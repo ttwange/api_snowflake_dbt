@@ -175,6 +175,4 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
 
-#deployments
-dbt_flow-deployment.yaml
-energy_main-deployment.yaml
+
