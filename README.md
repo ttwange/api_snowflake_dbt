@@ -66,3 +66,7 @@ Deployment plans can be found in YAML files within the project.
 
 - Building a data pipeline has its own different challenges:
 ![Different flow runs](image-4.png)
+
+## WorkFlow deployment Schedule
+
+![alt text](image-5.png)
