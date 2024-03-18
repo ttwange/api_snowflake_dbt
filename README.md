@@ -23,7 +23,7 @@ The `snowflake_ingest` Prefect flow orchestrates the ETL process:
 3. **transformation**: After fetching the data, this task transforms the JSON data into a pandas DataFrame (`df`). It then performs some data cleaning by dropping specific columns from the DataFrame.
 
 4. **load**: Once the data is cleaned, this task loads it into the Snowflake database. It prepares an SQL insert statement (`snowflake_insert_sql`) and executes it using Snowflake's cursor. The data is inserted into the specified table (`emission`) in Snowflake.
-![alt text](image.png)
+![alt text](images/image.png)
 5. **Main Function**: The script's main function (`energy_main`) orchestrates the ETL process by calling the above tasks in sequence. It fetches data, connects to Snowflake, performs transformation, loads data into Snowflake, and prints the cleaned DataFrame.
 
 ## Snowflake ETL Script (`snowflake_etl.py`)
@@ -43,9 +43,9 @@ The `dbt_workflow.py` script orchestrates dbt transformations:
 - Configures a dbt project and profile.
 - Executes dbt transformations sequentially.
 - DBT models materialized as *views* while the staging raw data materialized as a view
-![alt text](images\image-2.png)
+![alt text](images/image-2.pngimage-2.png)
 - Dbt models for the data
-![alt text](images\image-1.png)
+![alt text](images/image-1.png)
 ## Usage
 
 1. Ensure necessary environment variables (Snowflake credentials) are set.
@@ -61,12 +61,12 @@ Deployment plans can be found in YAML files within the project.
 
 - The flow runs of the api_snowflake_ETL workflows looks like this:
 
-![API TO SNOWFLAKE WORKFLOW](image-3.png) 
+![API TO SNOWFLAKE WORKFLOW](images/image-3.png) 
 
 
 - Building a data pipeline has its own different challenges:
-![Different flow runs](image-4.png)
+![Different flow runs](images/image-4.png)
 
 ## WorkFlow deployment Schedule
 
-![alt text](image-5.png)
+![alt text](images/image-5.png)
