@@ -32,7 +32,7 @@ def transformation(json_data):
     return df
 
 @task(log_prints=True, retries=3)
-def load(data, conn):
+def load(clean_data, conn):
     try:
         snowflake_insert_sql = """
             INSERT INTO emission (
@@ -44,6 +44,9 @@ def load(data, conn):
             Exchange_DK2_SE, Exchange_Bornholm_SE
         ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
+
+        # Convert DataFrame to a list of tuples
+        data = clean_data.values.tolist()
 
         # Create a cursor from the Snowflake connection
         cursor = conn.cursor()
