@@ -1,66 +1,66 @@
-import json
-from faker import Faker
-from confluent_kafka import SerializingProducer
-import random
-import time
-from datetime import datetime
+import os
+import requests
+import pandas as pd
+from dotenv import load_dotenv
+from snowflake.connector import connect, Error
+from prefect import flow, task
 
-fake =Faker()
+load_dotenv()
 
-def generate_sales_transaction():
-    user = fake.simple_profile()
+@task(log_prints=True, retries=3)
+def fetch_data():
+    url = "https://api.energidataservice.dk/dataset/PowerSystemRightNow/"
+    data = requests.get(url).json()
+    return data['records']
 
-    return {
-        "transactionId":fake.uuid4(),
-        "productId": random.choice(['product1','product2','product3','product4','product5','product6']),
-        "productName": random.choice(['laptop','mobile','tablet','watch','headphone','speaker']),
-        "productCategory": random.choice(['electronic','fashion','grocery','home','beauty','sports']),
-        "productPrice": round(random.uniform( 10, 1000),2),
-        "productQuantity": random.randint(1,10),
-        "productBrand":random.choice(['apple','samsung','oneplus','mi','sony','nokia']),
-        "currency": random.choice(['USD','GBP']),
-        "customerId": user['username'],
-        "transactionDate": datetime.utcnow().strftime('%Y-%m-%dT%H:%H:%M:%S.%f%z'),
-        "paymentMethod": random.choice(['credit_card','debit_card','Online_transfer'])
-    }
+@task(log_prints=True, retries=3)
+def transformation(json_data):
+    df = pd.DataFrame(json_data)
+    df = df.drop(columns=["aFRR_ActivatedDK1", "aFRR_ActivatedDK2", "mFRR_ActivatedDK1", "mFRR_ActivatedDK2", "ImbalanceDK1", "ImbalanceDK2"])
+    return df
 
-def delivery_report(err, msg):
-    if err is not None:
-        print(f"Message delivery failed: {err}")
-    else:
-        print(f"Message delivered to {msg.topic} [{msg.partition()}]")
+@task(log_prints=True, retries=3)
+def load(clean_data, snowflake_user, snowflake_password, snowflake_account, snowflake_warehouse, snowflake_database, snowflake_schema):
+    # Connect to Snowflake
+    conn = connect(
+        user=snowflake_user,
+        password=snowflake_password,
+        account=snowflake_account,
+        warehouse=snowflake_warehouse,
+        database=snowflake_database,
+        schema=snowflake_schema
+    )
+    cursor = conn.cursor()
 
-def main():
-    topic = 'financial_transactions'
-    producer = SerializingProducer({
-        'bootstrap.servers': 'localhost:9092'
-    })
+    clean_data_columns = clean_data.columns.tolist()
+    for _, row in clean_data.iterrows():
+        placeholders = ', '.join(['%s'] * len(clean_data_columns))
+        columns = ', '.join(clean_data_columns)
+        # Construct the SQL query
+        sql_query = f"""
+            INSERT INTO emission ({columns}) 
+            VALUES ({placeholders})
+        """
+        # Execute the SQL query
+        cursor.execute(sql_query, tuple(row))
 
-    curr_time = datetime.now()
+    conn.commit()
+    cursor.close()
+    conn.close()
+    print("Data loaded successfully into Snowflake.")
 
-    while (datetime.now() - curr_time).seconds < 120:
-        try:
-            transaction = generate_sales_transaction()
-            transaction['totalAmount'] = transaction['productPrice'] * transaction['productQuantity']
+@flow(name="Energy API ingest")
+def energy_main():
+    snowflake_user = os.getenv("snowflake_user")
+    snowflake_password = os.getenv("snowflake_password")
+    snowflake_account = os.getenv("snowflake_account")
+    snowflake_warehouse = os.getenv("snowflake_warehouse")
+    snowflake_database = os.getenv("snowflake_database")
+    snowflake_schema = os.getenv("snowflake_schema")
 
-            print( transaction['totalAmount'])
+    json_data = fetch_data()
+    clean_data = transformation(json_data)
+    load(clean_data, snowflake_user, snowflake_password, snowflake_account, snowflake_warehouse, snowflake_database, snowflake_schema)
 
-            producer.produce(topic,
-                             key=transaction['transactionId'],
-                             value=json.dumps(transaction),
-                            on_delivery=delivery_report
-            )
-
-            producer.poll(0)
-
-            #wait 5 seconds for the next transaction
-            time.sleep(5)
-
-        except BufferError:
-            print("Buffer full! Waiting...")
-            time.sleep(1)
-        except Exception as e:
-            print(e)
-
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    energy_main()
